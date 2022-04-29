@@ -9,23 +9,22 @@ class personaje():
         padre=None, 
         npc=False, 
         posicion=(0,0), 
-        size=(casilla_sx,casilla_sy)
+        size=(15, 15)
     ):
         self.sizex = size[0]
         self.sizey = size[1]
         self.posx = posicion[0]
         self.posy = posicion[1]
         self.camara = padre
-        self.dibujar()
         
-    
 
     def movimiento(self, direccion):
         match direccion:
             case 'Right':
                 self.posx = self.posx + self.sizex
-                if self.posx > num_cols * casilla_sx:
-                    self.posx = (num_cols * casilla_sx) - casilla_sx
+                # despues cambiar 30 por num_cols y 15 por casilla_sx
+                if self.posx > 30 * 15: 
+                    self.posx = (30 * 15) - 15
             case 'Left':
                 self.posx = self.posx - self.sizex
                 if self.posx < 0:
@@ -36,8 +35,9 @@ class personaje():
                     self.posy = 0
             case 'Down':
                 self.posy = self.posy + self.sizey
-                if self.posy > num_rows * casilla_sy:
-                    self.posy = (num_rows * casilla_sy) - casilla_sy
+                # despues cambiar 30 por num_rows y 15 por casilla_sy
+                if self.posy > 30 * 15:
+                    self.posy = (30 * 15) - 15
     
 
     def get_ubicacion(self):
@@ -89,5 +89,6 @@ root.bind('<Right>', lambda e:[jugador.movimiento(e.keysym), dibujar()])
 root.bind('<Left>', lambda e:[jugador.movimiento(e.keysym), dibujar()])
 root.bind('<Up>', lambda e:[jugador.movimiento(e.keysym), dibujar()])
 root.bind('<Down>', lambda e:[jugador.movimiento(e.keysym), dibujar()])
+dibujar()
 
 root.mainloop()

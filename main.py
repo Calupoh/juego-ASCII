@@ -7,43 +7,45 @@ class Personaje():
     def __init__(
         self, 
         npc=False, 
-        posicion=(0,0), 
-        size=(15, 15)
+        pos=[0,0],
+        size=15,
+        icono='geen',
     ):
-        self.sizex = size[0]
-        self.sizey = size[1]
-        self.posx = posicion[0]
-        self.posy = posicion[1]
+        self.size = size
+        self.icono = icono
+        self.destino = pos
+        self.origen = []
         
 
     def movimiento(self, direccion):
+        self.origen = self.destino.copy()
         match direccion:
             case 'Right':
-                self.posx = self.posx + self.sizex
+                self.destino[0] = self.destino[0] + self.size
                 # despues cambiar 30 por num_cols y 15 por casilla_sx
-                if self.posx > 30 * 15: 
-                    self.posx = (30 * 15) - 15
+                if self.destino[0] > 30 * 15: 
+                    self.destino[0] = (30 * 15) - 15
             case 'Left':
-                self.posx = self.posx - self.sizex
-                if self.posx < 0:
-                    self.posx = 0
+                self.destino[0] = self.destino[0] - self.size
+                if self.destino[0] < 0:
+                    self.destino[0] = 0
             case 'Up':
-                self.posy = self.posy - self.sizey
-                if self.posy < 0:
-                    self.posy = 0
+                self.destino[1] = self.destino[1] - self.size
+                if self.destino[1] < 0:
+                    self.destino[1] = 0
             case 'Down':
-                self.posy = self.posy + self.sizey
+                self.destino[1] = self.destino[1] + self.size
                 # despues cambiar 30 por num_rows y 15 por casilla_sy
-                if self.posy > 30 * 15:
-                    self.posy = (30 * 15) - 15
+                if self.destino[1] > 30 * 15:
+                    self.destino[1] = (30 * 15) - 15
     
 
     def get_ubicacion(self):
          return (
-                self.posx,
-                self.posy,
-                self.posx + self.sizex,
-                self.posy + self.sizey,
+                self.pos[0],
+                self.pos[1],
+                self.pos[0] + self.size[0],
+                self.pos[1] + self.size[1],
                 'green'
          )
 

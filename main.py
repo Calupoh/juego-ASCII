@@ -3,10 +3,9 @@ from tkinter import *
 from tkinter import ttk
 
 
-class personaje():
+class Personaje():
     def __init__(
         self, 
-        padre=None, 
         npc=False, 
         posicion=(0,0), 
         size=(15, 15)
@@ -15,7 +14,6 @@ class personaje():
         self.sizey = size[1]
         self.posx = posicion[0]
         self.posy = posicion[1]
-        self.camara = padre
         
 
     def movimiento(self, direccion):
@@ -50,8 +48,36 @@ class personaje():
          )
 
 
-class terreno():
-    pass
+class Terreno():
+    ''' self.area tiene la siguiente configuracion:
+    [
+        [(pos[0], pos[1], size[0], size[1], icono), ...],
+        [(pos[0], pos[1], size[0], size[1], icono), ...],
+        ...,
+    ]
+    '''
+    def __init__(self, posicion=(0,0), size=15):
+        self.cols = 30
+        self.rows = 30
+        self.size = size
+        self.pos = posicion
+        self.icono = 'black'
+        self.area = []
+        for r in range(self.rows):
+            row = []
+            for c in range(self.cols):
+                row.append([
+                    c * self.size,
+                    r * self.size,
+                    (c + 1) * self.size,
+                    (r + 1) * self.size,
+                    self.icono,
+                ])
+            self.area.append(row)
+  
+
+    def get_area(self):
+        return self.area
 
 
 def ajustar_cuadricula(col=30, row=30):
@@ -66,6 +92,16 @@ def ajustar_cuadricula(col=30, row=30):
 
 
 def dibujar():
+    t = terreno.get_area()
+    for filas in t:
+        for columnas in filas:
+            view.create_rectangle(
+                columnas[0],
+                columnas[1],
+                columnas[2],
+                columnas[3],
+                fill=columnas[4]
+            )
     j = jugador.get_ubicacion()
     view.create_rectangle(
                 j[0],
@@ -84,7 +120,9 @@ root.option_add('*tearOff', FALSE)
 view = Canvas(root, width=450, height=450, background='black')
 view.grid(column=0, row=0)
 
-jugador = personaje(view)
+jugador = Personaje()
+terreno = Terreno()
+
 root.bind('<Right>', lambda e:[jugador.movimiento(e.keysym), dibujar()])
 root.bind('<Left>', lambda e:[jugador.movimiento(e.keysym), dibujar()])
 root.bind('<Up>', lambda e:[jugador.movimiento(e.keysym), dibujar()])

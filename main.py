@@ -7,18 +7,18 @@ class Personaje():
     def __init__(
         self, 
         npc=False, 
-        pos=[0,0],
+        pos=(0,0),
         size=15,
-        icono='geen',
+        icono='green',
     ):
         self.size = size
         self.icono = icono
-        self.destino = pos
-        self.origen = []
+        self.destino = [pos[0], pos[1]]
+        self.origen = (None, None)
         
 
     def movimiento(self, direccion):
-        self.origen = self.destino.copy()
+        self.origen = (self.destino[0], self.destino[1])
         match direccion:
             case 'Right':
                 self.destino[0] = self.destino[0] + self.size
@@ -38,16 +38,6 @@ class Personaje():
                 # despues cambiar 30 por num_rows y 15 por casilla_sy
                 if self.destino[1] > 30 * 15:
                     self.destino[1] = (30 * 15) - 15
-    
-
-    def get_ubicacion(self):
-         return (
-                self.pos[0],
-                self.pos[1],
-                self.pos[0] + self.size[0],
-                self.pos[1] + self.size[1],
-                'green'
-         )
 
 
 class Terreno():
@@ -58,12 +48,12 @@ class Terreno():
         ...,
     ]
     '''
-    def __init__(self, posicion=(0,0), size=15):
+    def __init__(self, posicion=(0,0), size=15, icono='black'):
         self.cols = 30
         self.rows = 30
         self.size = size
         self.pos = posicion
-        self.icono = 'black'
+        self.icono = icono
         self.area = []
         for r in range(self.rows):
             row = []
@@ -76,10 +66,6 @@ class Terreno():
                     self.icono,
                 ])
             self.area.append(row)
-  
-
-    def get_area(self):
-        return self.area
 
 
 def ajustar_cuadricula(col=30, row=30):
@@ -94,23 +80,22 @@ def ajustar_cuadricula(col=30, row=30):
 
 
 def dibujar():
-    t = terreno.get_area()
-    for filas in t:
-        for columnas in filas:
-            view.create_rectangle(
-                columnas[0],
-                columnas[1],
-                columnas[2],
-                columnas[3],
-                fill=columnas[4]
-            )
-    j = jugador.get_ubicacion()
+    for filas in terreno.area:
+        for col in filas:
+            if (col[0], col[1]) == jugador.origen:
+                view.create_rectangle(
+                    col[0],
+                    col[1],
+                    col[2],
+                    col[3],
+                    fill=col[4]
+                )
     view.create_rectangle(
-                j[0],
-                j[1],
-                j[2],
-                j[3],
-                fill=j[4]
+                jugador.destino[0],
+                jugador.destino[1],
+                jugador.destino[0] + jugador.size,
+                jugador.destino[1] + jugador.size,
+                fill=jugador.icono
             )
 
 
@@ -123,12 +108,12 @@ view = Canvas(root, width=450, height=450, background='black')
 view.grid(column=0, row=0)
 
 jugador = Personaje()
-terreno = Terreno()
+terreno = Terreno(icono='grey')
+dibujar()
 
 root.bind('<Right>', lambda e:[jugador.movimiento(e.keysym), dibujar()])
 root.bind('<Left>', lambda e:[jugador.movimiento(e.keysym), dibujar()])
 root.bind('<Up>', lambda e:[jugador.movimiento(e.keysym), dibujar()])
 root.bind('<Down>', lambda e:[jugador.movimiento(e.keysym), dibujar()])
-dibujar()
 
 root.mainloop()

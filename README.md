@@ -5,7 +5,8 @@ un pequeño experimento de juego RogueLike con graficos ASCII. La idea es crear 
 
 ## RoadMap
 
-* [ ] Sistema simple para actulizar y crear un terreno
+* [*] Sistema simple para actulizar y crear un terreno
+* [ ] Uptimizar dibujo de terreno
 * [ ] Implementacion de muros 
 * [ ] Implementacion de mapa con varias zonas.
 * [ ] Sistema procedural para la generacion de zonas 
